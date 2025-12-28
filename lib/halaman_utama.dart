@@ -20,7 +20,14 @@ class _HalamanUtamaUMKMState extends State<HalamanUtamaUMKM> {
     "Minuman",
     "Fashion",
     "Kerajinan",
-    "Jasa"
+    "Jasa",
+    "Kue & Camilan",
+    "Hasil Bumi",
+    "Tanaman & Bibit",
+    "Produk Herbal",
+    "Lauk Pauk",
+    "Souvenir",
+    "Peternakan"
   ];
 
   @override
@@ -31,14 +38,25 @@ class _HalamanUtamaUMKMState extends State<HalamanUtamaUMKM> {
 
   // 2. UPDATE DATABASE DUMMY (Tambahkan field 'kategori')
   final List<Map<String, dynamic>> _produkList = [
+    // MAKANAN
     {
       "nama": "Keripik Singkong Pedas",
       "harga": 15000,
       "toko": "Dapur Bu Siti",
       "terjual": 50,
-      "kategori": "Makanan", // <--- Penting
+      "kategori": "Makanan",
       "image": Colors.orange[100]
     },
+    {
+      "nama": "Emping Melinjo Balado",
+      "harga": 25000,
+      "toko": "Camilan Bu Tini",
+      "terjual": 35,
+      "kategori": "Makanan",
+      "image": Colors.amber[100]
+    },
+    
+    // MINUMAN
     {
       "nama": "Kopi Robusta Lokal",
       "harga": 45000,
@@ -48,13 +66,15 @@ class _HalamanUtamaUMKMState extends State<HalamanUtamaUMKM> {
       "image": Colors.brown[100]
     },
     {
-      "nama": "Anyaman Bambu",
-      "harga": 75000,
-      "toko": "Kriya Mandiri",
-      "terjual": 15,
-      "kategori": "Kerajinan",
-      "image": Colors.green[100]
+      "nama": "Jamu Kunyit Asam",
+      "harga": 8000,
+      "toko": "Jamu Sehat Ibu Wati",
+      "terjual": 80,
+      "kategori": "Minuman",
+      "image": Colors.yellow[100]
     },
+    
+    // FASHION
     {
       "nama": "Batik Tulis Desa",
       "harga": 150000,
@@ -64,12 +84,174 @@ class _HalamanUtamaUMKMState extends State<HalamanUtamaUMKM> {
       "image": Colors.purple[100]
     },
     {
+      "nama": "Mukena Bordir Tangan",
+      "harga": 185000,
+      "toko": "Rajut Berkah",
+      "terjual": 12,
+      "kategori": "Fashion",
+      "image": Colors.pink[100]
+    },
+    
+    // KERAJINAN
+    {
+      "nama": "Anyaman Bambu",
+      "harga": 75000,
+      "toko": "Kriya Mandiri",
+      "terjual": 15,
+      "kategori": "Kerajinan",
+      "image": Colors.green[100]
+    },
+    {
+      "nama": "Tas Pandan Wangi",
+      "harga": 95000,
+      "toko": "Rajut Ibu",
+      "terjual": 8,
+      "kategori": "Kerajinan",
+      "image": Colors.teal[100]
+    },
+    
+    // JASA
+    {
       "nama": "Jasa Desain Logo",
       "harga": 50000,
       "toko": "Santri Creative",
       "terjual": 10,
       "kategori": "Jasa",
       "image": Colors.blue[100]
+    },
+    {
+      "nama": "Catering Nasi Kotak",
+      "harga": 15000,
+      "toko": "Catering Bu Yanti",
+      "terjual": 150,
+      "kategori": "Jasa",
+      "image": Colors.indigo[100]
+    },
+    
+    // KUE & CAMILAN
+    {
+      "nama": "Kue Lapis Legit",
+      "harga": 125000,
+      "toko": "Kue Mama Ina",
+      "terjual": 30,
+      "kategori": "Kue & Camilan",
+      "image": Colors.orange[200]
+    },
+    {
+      "nama": "Brownies Kukus Pandan",
+      "harga": 35000,
+      "toko": "Dapur Azzahra",
+      "terjual": 55,
+      "kategori": "Kue & Camilan",
+      "image": Colors.green[200]
+    },
+    
+    // HASIL BUMI
+    {
+      "nama": "Sayur Kangkung Segar",
+      "harga": 3000,
+      "toko": "Kebun Pak Jarwo",
+      "terjual": 200,
+      "kategori": "Hasil Bumi",
+      "image": Colors.lightGreen[100]
+    },
+    {
+      "nama": "Singkong Rebus",
+      "harga": 5000,
+      "toko": "Tani Muda",
+      "terjual": 100,
+      "kategori": "Hasil Bumi",
+      "image": Colors.brown[50]
+    },
+    
+    // TANAMAN & BIBIT
+    {
+      "nama": "Bibit Cabai Rawit",
+      "harga": 5000,
+      "toko": "Bibit Subur",
+      "terjual": 70,
+      "kategori": "Tanaman & Bibit",
+      "image": Colors.red[100]
+    },
+    {
+      "nama": "Tanaman Lidah Mertua",
+      "harga": 25000,
+      "toko": "Hijau Nursery",
+      "terjual": 45,
+      "kategori": "Tanaman & Bibit",
+      "image": Colors.green[100]
+    },
+    
+    // PRODUK HERBAL
+    {
+      "nama": "Madu Hutan Asli",
+      "harga": 95000,
+      "toko": "Herbal Berkah",
+      "terjual": 40,
+      "kategori": "Produk Herbal",
+      "image": Colors.amber[200]
+    },
+    {
+      "nama": "Minyak Kayu Putih",
+      "harga": 15000,
+      "toko": "Jamu Tradisional",
+      "terjual": 60,
+      "kategori": "Produk Herbal",
+      "image": Colors.teal[200]
+    },
+    
+    // LAUK PAUK
+    {
+      "nama": "Ikan Asin Jambal",
+      "harga": 35000,
+      "toko": "Lauk Sedap",
+      "terjual": 55,
+      "kategori": "Lauk Pauk",
+      "image": Colors.orange[50]
+    },
+    {
+      "nama": "Abon Sapi Pedas",
+      "harga": 65000,
+      "toko": "Abon Bu Nur",
+      "terjual": 40,
+      "kategori": "Lauk Pauk",
+      "image": Colors.red[50]
+    },
+    
+    // SOUVENIR
+    {
+      "nama": "Gantungan Kunci Batik",
+      "harga": 15000,
+      "toko": "Cinderamata Desa",
+      "terjual": 90,
+      "kategori": "Souvenir",
+      "image": Colors.purple[100]
+    },
+    {
+      "nama": "Kipas Bambu Lukis",
+      "harga": 25000,
+      "toko": "Kriya Seni",
+      "terjual": 35,
+      "kategori": "Souvenir",
+      "image": Colors.brown[100]
+    },
+    
+    // PETERNAKAN
+    {
+      "nama": "Telur Ayam Kampung",
+      "harga": 35000,
+      "toko": "Ternak Makmur",
+      "terjual": 120,
+      "kategori": "Peternakan",
+      "image": Colors.yellow[200]
+    },
+    {
+      "nama": "Ayam Kampung Hidup",
+      "harga": 85000,
+      "toko": "Peternakan Pak Udin",
+      "terjual": 25,
+      "kategori": "Peternakan",
+      "image": Colors.orange[50]
     },
   ];
 
@@ -458,7 +640,7 @@ class _HalamanUtamaUMKMState extends State<HalamanUtamaUMKM> {
               DropdownButtonFormField<String>(
                 value: kategoriPilih,
                 decoration: const InputDecoration(labelText: "Kategori"),
-                items: ["Makanan", "Minuman", "Fashion", "Kerajinan", "Jasa"]
+                items: ["Makanan", "Minuman", "Fashion", "Kerajinan", "Jasa", "Kue & Camilan", "Hasil Bumi", "Tanaman & Bibit", "Produk Herbal", "Lauk Pauk", "Souvenir", "Peternakan"]
                     .map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
                 onChanged: (val) => setStateDialog(() => kategoriPilih = val!),
               ),
