@@ -12,6 +12,7 @@ class HalamanUtamaUMKM extends StatefulWidget {
 class _HalamanUtamaUMKMState extends State<HalamanUtamaUMKM> {
   // 1. VARIABLE STATE UNTUK KATEGORI
   String _kategoriTerpilih = "Semua"; // Defaultnya menampilkan semua
+  final ScrollController _categoryScrollController = ScrollController();
   
   final List<String> _daftarKategori = [
     "Semua",
@@ -21,6 +22,12 @@ class _HalamanUtamaUMKMState extends State<HalamanUtamaUMKM> {
     "Kerajinan",
     "Jasa"
   ];
+
+  @override
+  void dispose() {
+    _categoryScrollController.dispose();
+    super.dispose();
+  }
 
   // 2. UPDATE DATABASE DUMMY (Tambahkan field 'kategori')
   final List<Map<String, dynamic>> _produkList = [
@@ -183,22 +190,13 @@ class _HalamanUtamaUMKMState extends State<HalamanUtamaUMKM> {
 
             const SizedBox(height: 25),
 
-            // --- KATEGORI (Sekarang Bisa Diklik!) ---
+            // --- KATEGORI (Responsive dengan Chevron untuk Desktop) ---
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: const Text("Kategori", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             ),
             const SizedBox(height: 10),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Row(
-                // Generate tombol kategori dari list
-                children: _daftarKategori.map((kategori) {
-                  return _chipKategori(kategori, _kategoriTerpilih == kategori);
-                }).toList(),
-              ),
-            ),
+            _buildCategorySection(),
 
             const SizedBox(height: 25),
 
@@ -323,21 +321,86 @@ class _HalamanUtamaUMKMState extends State<HalamanUtamaUMKM> {
     );
   }
 
-  // WIDGET: Chip Kategori (DENGAN FUNGSI KLIK)
+  // WIDGET: Category Section with Desktop Chevrons and Mobile Scroll
+  Widget _buildCategorySection() {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        bool isDesktop = constraints.maxWidth > 800;
+        
+        if (isDesktop) {
+          // Desktop: dengan chevron buttons
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(
+              children: [
+                // Chevron Left Button
+                IconButton(
+                  icon: const Icon(Icons.chevron_left),
+                  onPressed: () {
+                    _categoryScrollController.animateTo(
+                      _categoryScrollController.offset - 200,
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                    );
+                  },
+                ),
+                // Category List
+                Expanded(
+                  child: SingleChildScrollView(
+                    controller: _categoryScrollController,
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: _daftarKategori.map((kategori) {
+                        return _chipKategori(kategori, _kategoriTerpilih == kategori);
+                      }).toList(),
+                    ),
+                  ),
+                ),
+                // Chevron Right Button
+                IconButton(
+                  icon: const Icon(Icons.chevron_right),
+                  onPressed: () {
+                    _categoryScrollController.animateTo(
+                      _categoryScrollController.offset + 200,
+                      duration: const Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                    );
+                  },
+                ),
+              ],
+            ),
+          );
+        } else {
+          // Mobile: simple horizontal scroll
+          return SingleChildScrollView(
+            controller: _categoryScrollController,
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Row(
+              children: _daftarKategori.map((kategori) {
+                return _chipKategori(kategori, _kategoriTerpilih == kategori);
+              }).toList(),
+            ),
+          );
+        }
+      },
+    );
+  }
+
   // WIDGET: Chip Kategori (DIPERBAIKI: Responsif & Teks Full)
   Widget _chipKategori(String label, bool isActive) {
     return Padding(
       padding: const EdgeInsets.only(right: 10),
       child: ChoiceChip(
         // 1. Tambahkan labelPadding agar teks tidak terpotong
-        labelPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2), 
+        labelPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4), 
         
         label: Text(
           label,
           style: TextStyle(
             color: isActive ? Colors.white : Colors.black87,
-            fontWeight: isActive ? FontWeight.bold : FontWeight.normal, // Biar yang aktif lebih tebal
-            fontSize: 14, // Ukuran font pas
+            fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
+            fontSize: 14,
           ),
         ),
         selected: isActive,
@@ -349,17 +412,15 @@ class _HalamanUtamaUMKMState extends State<HalamanUtamaUMKM> {
         selectedColor: Colors.green,
         backgroundColor: Colors.white,
         
-        // 2. Opsi: Hilangkan centang (checkmark) agar lebar chip konsisten
-        // Jika ingin tetap ada centang, set ke 'true'. 
-        // Tapi 'false' biasanya lebih rapi untuk menu kategori.
+        // 2. Hilangkan checkmark agar lebar chip konsisten
         showCheckmark: false, 
         
-        // 3. Tambahkan border tipis biar yang putih tidak "hilang" di background terang
+        // 3. Border yang jelas
         side: isActive 
-            ? const BorderSide(color: Colors.green) // Border hijau kalau aktif
-            : BorderSide(color: Colors.grey.shade300), // Border abu kalau tidak aktif
+            ? const BorderSide(color: Colors.green, width: 2)
+            : BorderSide(color: Colors.grey.shade300),
             
-        elevation: isActive ? 2 : 0, // Sedikit bayangan kalau aktif
+        elevation: isActive ? 2 : 0,
         shadowColor: Colors.green.withOpacity(0.4),
       ),
     );
