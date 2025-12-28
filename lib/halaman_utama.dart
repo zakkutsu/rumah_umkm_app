@@ -482,31 +482,13 @@ class _HalamanUtamaUMKMState extends State<HalamanUtamaUMKM> {
     return Container(
       width: double.infinity,
       color: const Color(0xFF1B5E20), // Hijau Tua
-      padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
+      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
       child: Column(
         children: [
-          // Logo & Slogan
-          const Icon(Icons.storefront, size: 50, color: Colors.white),
-          const SizedBox(height: 10),
-          const Text(
-            "Rumah UMKM RW 05",
-            style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 10),
-          const Text(
-            "Platform digital untuk memajukan ekonomi warga.\nDari warga, oleh warga, untuk warga.",
-            textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.white70, height: 1.5),
-          ),
-          
-          const SizedBox(height: 30),
-          const Divider(color: Colors.white24),
-          const SizedBox(height: 20),
-
           // Menu Link (Baris)
           Wrap(
             spacing: 20,
-            runSpacing: 10,
+            runSpacing: 8,
             alignment: WrapAlignment.center,
             children: [
               _textLink("Tentang Kami"),
@@ -516,7 +498,7 @@ class _HalamanUtamaUMKMState extends State<HalamanUtamaUMKM> {
             ],
           ),
 
-          const SizedBox(height: 30),
+          const SizedBox(height: 15),
 
           // Kontak & Sosmed
           Row(
@@ -532,7 +514,7 @@ class _HalamanUtamaUMKMState extends State<HalamanUtamaUMKM> {
             ],
           ),
 
-          const SizedBox(height: 30),
+          const SizedBox(height: 15),
           
           // Copyright
           const Text(
