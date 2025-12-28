@@ -387,41 +387,48 @@ class _HalamanUtamaUMKMState extends State<HalamanUtamaUMKM> {
     );
   }
 
-  // WIDGET: Chip Kategori (DIPERBAIKI: Responsif & Teks Full)
+  // WIDGET: Chip Kategori (Custom untuk Full Text Visibility)
   Widget _chipKategori(String label, bool isActive) {
     return Padding(
       padding: const EdgeInsets.only(right: 10),
-      child: ChoiceChip(
-        // 1. Tambahkan labelPadding agar teks tidak terpotong
-        labelPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4), 
-        
-        label: Text(
-          label,
-          style: TextStyle(
-            color: isActive ? Colors.white : Colors.black87,
-            fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
-            fontSize: 14,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: () {
+            setState(() {
+              _kategoriTerpilih = label;
+            });
+          },
+          borderRadius: BorderRadius.circular(25),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            decoration: BoxDecoration(
+              color: isActive ? Colors.green : Colors.white,
+              borderRadius: BorderRadius.circular(25),
+              border: Border.all(
+                color: isActive ? Colors.green : Colors.grey.shade300,
+                width: isActive ? 2 : 1,
+              ),
+              boxShadow: isActive
+                  ? [
+                      BoxShadow(
+                        color: Colors.green.withOpacity(0.3),
+                        blurRadius: 4,
+                        offset: const Offset(0, 2),
+                      )
+                    ]
+                  : null,
+            ),
+            child: Text(
+              label,
+              style: TextStyle(
+                color: isActive ? Colors.white : Colors.black87,
+                fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
+                fontSize: 14,
+              ),
+            ),
           ),
         ),
-        selected: isActive,
-        onSelected: (bool selected) {
-          setState(() {
-            _kategoriTerpilih = label;
-          });
-        },
-        selectedColor: Colors.green,
-        backgroundColor: Colors.white,
-        
-        // 2. Hilangkan checkmark agar lebar chip konsisten
-        showCheckmark: false, 
-        
-        // 3. Border yang jelas
-        side: isActive 
-            ? const BorderSide(color: Colors.green, width: 2)
-            : BorderSide(color: Colors.grey.shade300),
-            
-        elevation: isActive ? 2 : 0,
-        shadowColor: Colors.green.withOpacity(0.4),
       ),
     );
   }
