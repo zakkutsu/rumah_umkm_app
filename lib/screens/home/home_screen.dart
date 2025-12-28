@@ -663,52 +663,105 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget _footer() {
     return Container(
       width: double.infinity,
-      color: const Color(0xFF1B5E20), // Hijau Tua
-      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            const Color(0xFF1B5E20),
+            const Color(0xFF0D3D10),
+          ],
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 20,
+            offset: const Offset(0, -5),
+          ),
+        ],
+      ),
+      padding: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
       child: Column(
         children: [
           // Menu Link (Baris)
           Wrap(
-            spacing: 20,
-            runSpacing: 8,
+            spacing: 25,
+            runSpacing: 12,
             alignment: WrapAlignment.center,
             children: [
               _textLink("Tentang Kami"),
+              _buildDivider(),
               _textLink("Cara Belanja"),
+              _buildDivider(),
               _textLink("Daftar Mitra"),
+              _buildDivider(),
               _textLink("Bantuan"),
             ],
           ),
 
-          const SizedBox(height: 15),
+          const SizedBox(height: 25),
 
-          // Kontak & Sosmed
+          // Divider dengan icon
           Row(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              _iconSosmed(Icons.facebook),
-              const SizedBox(width: 15),
-              _iconSosmed(Icons.camera_alt), // Instagram
-              const SizedBox(width: 15),
-              _iconSosmed(Icons.email),
-              const SizedBox(width: 15),
-              _iconSosmed(Icons.phone),
+              Expanded(child: Divider(color: Colors.white.withOpacity(0.2), thickness: 1)),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: Icon(Icons.storefront, color: Colors.white.withOpacity(0.4), size: 20),
+              ),
+              Expanded(child: Divider(color: Colors.white.withOpacity(0.2), thickness: 1)),
             ],
           ),
 
-          const SizedBox(height: 15),
+          const SizedBox(height: 25),
+
+          // Kontak & Sosmed dengan hover effect
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _iconSosmed(Icons.facebook, "Facebook"),
+              const SizedBox(width: 20),
+              _iconSosmed(Icons.camera_alt, "Instagram"),
+              const SizedBox(width: 20),
+              _iconSosmed(Icons.email, "Email"),
+              const SizedBox(width: 20),
+              _iconSosmed(Icons.phone, "Phone"),
+            ],
+          ),
+
+          const SizedBox(height: 25),
           
-          // Copyright
-          const Text(
-            "© 2025 Smart Village System. All rights reserved.",
-            style: TextStyle(color: Colors.white54, fontSize: 12),
+          // Copyright dengan style lebih baik
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.copyright, color: Colors.white.withOpacity(0.5), size: 14),
+              const SizedBox(width: 5),
+              Text(
+                "2025 Smart Village System. All rights reserved.",
+                style: TextStyle(
+                  color: Colors.white.withOpacity(0.6),
+                  fontSize: 12,
+                  letterSpacing: 0.5,
+                ),
+              ),
+            ],
           ),
         ],
       ),
     );
   }
 
-  // Helper kecil untuk Teks Link Footer
+  // Divider kecil antar link
+  Widget _buildDivider() {
+    return Container(
+      height: 15,
+      width: 1,
+      color: Colors.white.withOpacity(0.3),
+    );
+  }
+
+  // Helper kecil untuk Teks Link Footer dengan hover effect
   Widget _textLink(String text) {
     String route = '/';
     if (text == "Tentang Kami") route = '/tentang';
@@ -716,21 +769,54 @@ class _HomeScreenState extends State<HomeScreen> {
     else if (text == "Daftar Mitra") route = '/mitra';
     else if (text == "Bantuan") route = '/bantuan';
     
-    return InkWell(
-      onTap: () => context.push(route),
-      child: Text(text, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w500)),
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      child: InkWell(
+        onTap: () => context.push(route),
+        borderRadius: BorderRadius.circular(4),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          child: Text(
+            text,
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w500,
+              fontSize: 14,
+              letterSpacing: 0.3,
+            ),
+          ),
+        ),
+      ),
     );
   }
 
-  // Helper kecil untuk Icon Sosmed
-  Widget _iconSosmed(IconData icon) {
-    return Container(
-      padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.white24),
-        shape: BoxShape.circle,
+  // Helper kecil untuk Icon Sosmed dengan hover dan tooltip
+  Widget _iconSosmed(IconData icon, String label) {
+    return Tooltip(
+      message: label,
+      child: MouseRegion(
+        cursor: SystemMouseCursors.click,
+        child: InkWell(
+          onTap: () {},
+          borderRadius: BorderRadius.circular(25),
+          child: Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.1),
+              border: Border.all(color: Colors.white.withOpacity(0.3), width: 1.5),
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 8,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Icon(icon, color: Colors.white, size: 20),
+          ),
+        ),
       ),
-      child: Icon(icon, color: Colors.white, size: 20),
     );
   }
 }
