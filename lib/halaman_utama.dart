@@ -242,6 +242,9 @@ class _HalamanUtamaUMKMState extends State<HalamanUtamaUMKM> {
               ),
             ),
             const SizedBox(height: 100),
+            
+            // --- FOOTER PROFESSIONAL ---
+            _footer(),
           ],
         ),
       ),
@@ -471,6 +474,93 @@ class _HalamanUtamaUMKMState extends State<HalamanUtamaUMKM> {
           ],
         ),
       ),
+    );
+  }
+
+  // WIDGET: Footer Professional
+  Widget _footer() {
+    return Container(
+      width: double.infinity,
+      color: const Color(0xFF1B5E20), // Hijau Tua
+      padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
+      child: Column(
+        children: [
+          // Logo & Slogan
+          const Icon(Icons.storefront, size: 50, color: Colors.white),
+          const SizedBox(height: 10),
+          const Text(
+            "Rumah UMKM RW 05",
+            style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 10),
+          const Text(
+            "Platform digital untuk memajukan ekonomi warga.\nDari warga, oleh warga, untuk warga.",
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Colors.white70, height: 1.5),
+          ),
+          
+          const SizedBox(height: 30),
+          const Divider(color: Colors.white24),
+          const SizedBox(height: 20),
+
+          // Menu Link (Baris)
+          Wrap(
+            spacing: 20,
+            runSpacing: 10,
+            alignment: WrapAlignment.center,
+            children: [
+              _textLink("Tentang Kami"),
+              _textLink("Cara Belanja"),
+              _textLink("Daftar Mitra"),
+              _textLink("Bantuan"),
+            ],
+          ),
+
+          const SizedBox(height: 30),
+
+          // Kontak & Sosmed
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _iconSosmed(Icons.facebook),
+              const SizedBox(width: 15),
+              _iconSosmed(Icons.camera_alt), // Instagram
+              const SizedBox(width: 15),
+              _iconSosmed(Icons.email),
+              const SizedBox(width: 15),
+              _iconSosmed(Icons.phone),
+            ],
+          ),
+
+          const SizedBox(height: 30),
+          
+          // Copyright
+          const Text(
+            "© 2025 Smart Village System. All rights reserved.",
+            style: TextStyle(color: Colors.white54, fontSize: 12),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Helper kecil untuk Teks Link Footer
+  Widget _textLink(String text) {
+    return InkWell(
+      onTap: () {},
+      child: Text(text, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w500)),
+    );
+  }
+
+  // Helper kecil untuk Icon Sosmed
+  Widget _iconSosmed(IconData icon) {
+    return Container(
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.white24),
+        shape: BoxShape.circle,
+      ),
+      child: Icon(icon, color: Colors.white, size: 20),
     );
   }
 }
