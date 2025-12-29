@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import '../../utils/auth_service.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final authService = context.watch<AuthService>();
+    final user = authService.currentUser;
+    
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
@@ -41,29 +46,37 @@ class ProfileScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  const Text(
-                    'Budi Santoso',
-                    style: TextStyle(
+                  Text(
+                    user.name,
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 4),
-                  const Text(
-                    'budi.santoso@email.com',
-                    style: TextStyle(color: Colors.white70, fontSize: 14),
+                  Text(
+                    user.email,
+                    style: const TextStyle(color: Colors.white70, fontSize: 14),
                   ),
                   const SizedBox(height: 16),
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.2),
+                      color: Colors.white.withValues(alpha: 0.2),
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    child: const Text(
-                      'Member Sejak Januari 2025',
-                      style: TextStyle(color: Colors.white, fontSize: 12),
+                    child: Text(
+                      user.isSeller 
+                          ? '🏪 Penjual - ${user.storeName ?? "Toko"}' 
+                          : user.isCustomer 
+                              ? '👤 Pelanggan' 
+                              : '👋 Tamu',
+                      style: const TextStyle(
+                        color: Colors.white, 
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ],
@@ -76,9 +89,12 @@ class ProfileScreen extends StatelessWidget {
             _buildSection(
               'Informasi Personal',
               [
-                _buildInfoTile(Icons.phone, 'No. Handphone', '+62 812 3456 7890'),
-                _buildInfoTile(Icons.location_on, 'Alamat', 'Jl. Raya Desa No. 123, RW 05'),
-                _buildInfoTile(Icons.cake, 'Tanggal Lahir', '15 Agustus 1990'),
+                _buildInfoTile(Icons.phone, 'No. Handphone', user.phone),
+                _buildInfoTile(Icons.email, 'Email', user.email),
+                if (user.isSeller) ...[
+                  _buildInfoTile(Icons.store, 'Nama Toko', user.storeName ?? '-'),
+                  _buildInfoTile(Icons.category, 'Kategori Toko', user.storeCategory ?? '-'),
+                ],
               ],
             ),
 
@@ -90,13 +106,22 @@ class ProfileScreen extends StatelessWidget {
               [
                 Row(
                   children: [
-                    Expanded(
-                      child: _buildStatCard('12', 'Pesanan', Icons.shopping_bag),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: _buildStatCard('5', 'Produk Dijual', Icons.store),
-                    ),
+                    if (!user.isGuest) ...[
+                      Expanded(
+                        child: _buildStatCard('0', 'Pesanan', Icons.shopping_bag),
+                      ),
+                      const SizedBox(width: 12),
+                    ],
+                    if (user.isSeller) ...[
+                      Expanded(
+                        child: _buildStatCard('0', 'Produk Dijual', Icons.store),
+                      ),
+                    ],
+                    if (user.isGuest) ...[
+                      Expanded(
+                        child: _buildStatCard('∞', 'Jelajahi Produk', Icons.explore),
+                      ),
+                    ],
                   ],
                 ),
               ],
