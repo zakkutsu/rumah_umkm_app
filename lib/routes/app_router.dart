@@ -12,6 +12,7 @@ import '../screens/store/store_screen.dart';
 import '../screens/settings/settings_screen.dart';
 import '../screens/auth/login_screen.dart';
 import '../screens/auth/register_screen.dart';
+import '../screens/auth/open_store_screen.dart';
 
 /// Konfigurasi routing aplikasi UMKM
 /// Semua route terpusat di sini untuk maintenance mudah
@@ -48,6 +49,11 @@ final GoRouter appRouter = GoRouter(
       path: '/register',
       name: 'register',
       builder: (context, state) => const RegisterScreen(),
+    ),
+    GoRoute(
+      path: '/buka-toko',
+      name: 'open-store',
+      builder: (context, state) => const OpenStoreScreen(),
     ),
 
     // PROFILE MENU SCREENS

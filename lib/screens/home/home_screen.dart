@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import '../../utils/auth_service.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -311,6 +313,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final authService = context.watch<AuthService>();
+    final user = authService.currentUser;
+    
     // 3. LOGIC FILTERING (Saring data sebelum ditampilkan)
     List<Map<String, dynamic>> produkDitampilkan;
     if (_kategoriTerpilih == "Semua") {
@@ -357,128 +362,175 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ],
                 ),
-                // Profile Dropdown
-                PopupMenuButton<String>(
-                  offset: const Offset(0, 50),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey.shade300),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        CircleAvatar(
-                          radius: 16,
-                          backgroundColor: Colors.green.shade100,
-                          child: const Icon(Icons.person, size: 18, color: Colors.green),
+                // Profile Dropdown atau Login Button
+                user.isGuest
+                    ? ElevatedButton.icon(
+                        onPressed: () => context.push('/login'),
+                        icon: const Icon(Icons.login, size: 18),
+                        label: const Text('Masuk/Daftar'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.green,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
                         ),
-                        const SizedBox(width: 8),
-                        const Text(
-                          "Budi Santoso",
-                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-                        ),
-                        const SizedBox(width: 4),
-                        const Icon(Icons.arrow_drop_down, size: 20),
-                      ],
-                    ),
-                  ),
-                  itemBuilder: (context) => [
-                    const PopupMenuItem(
-                      value: 'profile',
-                      child: Row(
-                        children: [
-                          Icon(Icons.person_outline, size: 20),
-                          SizedBox(width: 12),
-                          Text('Profil Saya'),
-                        ],
-                      ),
-                    ),
-                    const PopupMenuItem(
-                      value: 'orders',
-                      child: Row(
-                        children: [
-                          Icon(Icons.receipt_long_outlined, size: 20),
-                          SizedBox(width: 12),
-                          Text('Pesanan Saya'),
-                        ],
-                      ),
-                    ),
-                    const PopupMenuItem(
-                      value: 'store',
-                      child: Row(
-                        children: [
-                          Icon(Icons.store_outlined, size: 20),
-                          SizedBox(width: 12),
-                          Text('Toko Saya'),
-                        ],
-                      ),
-                    ),
-                    const PopupMenuDivider(),
-                    const PopupMenuItem(
-                      value: 'settings',
-                      child: Row(
-                        children: [
-                          Icon(Icons.settings_outlined, size: 20),
-                          SizedBox(width: 12),
-                          Text('Pengaturan'),
-                        ],
-                      ),
-                    ),
-                    const PopupMenuItem(
-                      value: 'logout',
-                      child: Row(
-                        children: [
-                          Icon(Icons.logout, size: 20, color: Colors.red),
-                          SizedBox(width: 12),
-                          Text('Keluar', style: TextStyle(color: Colors.red)),
-                        ],
-                      ),
-                    ),
-                  ],
-                  onSelected: (value) {
-                    // Navigate to respective screens
-                    switch (value) {
-                      case 'profile':
-                        context.push('/profil');
-                        break;
-                      case 'orders':
-                        context.push('/pesanan');
-                        break;
-                      case 'store':
-                        context.push('/toko');
-                        break;
-                      case 'settings':
-                        context.push('/pengaturan');
-                        break;
-                      case 'logout':
-                        showDialog(
-                          context: context,
-                          builder: (ctx) => AlertDialog(
-                            title: const Text('Keluar'),
-                            content: const Text('Apakah Anda yakin ingin keluar?'),
-                            actions: [
-                              TextButton(
-                                onPressed: () => Navigator.pop(ctx),
-                                child: const Text('Batal'),
+                      )
+                    : PopupMenuButton<String>(
+                        offset: const Offset(0, 50),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey.shade300),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              CircleAvatar(
+                                radius: 16,
+                                backgroundColor: Colors.green.shade100,
+                                child: const Icon(Icons.person, size: 18, color: Colors.green),
                               ),
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.pop(ctx);
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(content: Text('Berhasil keluar')),
-                                  );
-                                },
-                                child: const Text('Keluar', style: TextStyle(color: Colors.red)),
+                              const SizedBox(width: 8),
+                              Text(
+                                user.name,
+                                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
                               ),
+                              const SizedBox(width: 4),
+                              const Icon(Icons.arrow_drop_down, size: 20),
                             ],
                           ),
-                        );
-                        break;
-                    }
-                  },
-                ),
+                        ),
+                        itemBuilder: (context) {
+                          List<PopupMenuEntry<String>> menuItems = [
+                            const PopupMenuItem(
+                              value: 'profile',
+                              child: Row(
+                                children: [
+                                  Icon(Icons.person_outline, size: 20),
+                                  SizedBox(width: 12),
+                                  Text('Profil Saya'),
+                                ],
+                              ),
+                            ),
+                            const PopupMenuItem(
+                              value: 'orders',
+                              child: Row(
+                                children: [
+                                  Icon(Icons.receipt_long_outlined, size: 20),
+                                  SizedBox(width: 12),
+                                  Text('Pesanan Saya'),
+                                ],
+                              ),
+                            ),
+                          ];
+
+                          // Tambahkan menu Toko untuk Seller
+                          if (user.isSeller) {
+                            menuItems.add(
+                              const PopupMenuItem(
+                                value: 'store',
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.store_outlined, size: 20),
+                                    SizedBox(width: 12),
+                                    Text('Toko Saya'),
+                                  ],
+                                ),
+                              ),
+                            );
+                          } else if (user.isCustomer) {
+                            // Menu "Buka Toko" untuk Customer
+                            menuItems.add(
+                              const PopupMenuItem(
+                                value: 'open-store',
+                                child: Row(
+                                  children: [
+                                    Icon(Icons.storefront, size: 20, color: Colors.green),
+                                    SizedBox(width: 12),
+                                    Text('Buka Toko', style: TextStyle(color: Colors.green)),
+                                  ],
+                                ),
+                              ),
+                            );
+                          }
+
+                          menuItems.addAll([
+                            const PopupMenuDivider(),
+                            const PopupMenuItem(
+                              value: 'settings',
+                              child: Row(
+                                children: [
+                                  Icon(Icons.settings_outlined, size: 20),
+                                  SizedBox(width: 12),
+                                  Text('Pengaturan'),
+                                ],
+                              ),
+                            ),
+                            const PopupMenuItem(
+                              value: 'logout',
+                              child: Row(
+                                children: [
+                                  Icon(Icons.logout, size: 20, color: Colors.red),
+                                  SizedBox(width: 12),
+                                  Text('Keluar', style: TextStyle(color: Colors.red)),
+                                ],
+                              ),
+                            ),
+                          ]);
+
+                          return menuItems;
+                        },
+                        onSelected: (value) {
+                          // Navigate to respective screens
+                          switch (value) {
+                            case 'profile':
+                              context.push('/profil');
+                              break;
+                            case 'orders':
+                              context.push('/pesanan');
+                              break;
+                            case 'store':
+                              context.push('/toko');
+                              break;
+                            case 'open-store':
+                              context.push('/buka-toko');
+                              break;
+                            case 'settings':
+                              context.push('/pengaturan');
+                              break;
+                            case 'logout':
+                              showDialog(
+                                context: context,
+                                builder: (ctx) => AlertDialog(
+                                  title: const Text('Keluar'),
+                                  content: const Text('Apakah Anda yakin ingin keluar?'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => Navigator.pop(ctx),
+                                      child: const Text('Batal'),
+                                    ),
+                                    TextButton(
+                                      onPressed: () async {
+                                        Navigator.pop(ctx);
+                                        await context.read<AuthService>().logout();
+                                        if (context.mounted) {
+                                          ScaffoldMessenger.of(context).showSnackBar(
+                                            const SnackBar(content: Text('Berhasil keluar')),
+                                          );
+                                        }
+                                      },
+                                      child: const Text('Keluar', style: TextStyle(color: Colors.red)),
+                                    ),
+                                  ],
+                                ),
+                              );
+                              break;
+                          }
+                        },
+                      ),
               ],
             ),
             const SizedBox(height: 12),
