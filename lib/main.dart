@@ -24,7 +24,7 @@ class RumahUMKMApp extends StatelessWidget {
     return ChangeNotifierProvider.value(
       value: authService,
       child: MaterialApp.router(
-        routerConfig: appRouter,
+        routerConfig: AppRouter.createRouter(authService),
         title: 'Rumah UMKM Desa',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(

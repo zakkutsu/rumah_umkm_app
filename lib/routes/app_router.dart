@@ -13,12 +13,40 @@ import '../screens/settings/settings_screen.dart';
 import '../screens/auth/login_screen.dart';
 import '../screens/auth/register_screen.dart';
 import '../screens/auth/open_store_screen.dart';
+import '../utils/auth_service.dart';
 
-/// Konfigurasi routing aplikasi UMKM
-/// Semua route terpusat di sini untuk maintenance mudah
-final GoRouter appRouter = GoRouter(
-  initialLocation: '/',
-  routes: [
+/// Konfigurasi routing aplikasi UMKM dengan Route Guards
+class AppRouter {
+  static GoRouter createRouter(AuthService authService) {
+    return GoRouter(
+      initialLocation: '/',
+      redirect: (context, state) {
+        final user = authService.currentUser;
+        final isGuest = user.isGuest;
+        
+        // Protected routes yang butuh login
+        final protectedRoutes = ['/profil', '/pesanan', '/pengaturan', '/keranjang'];
+        final sellerOnlyRoutes = ['/toko'];
+        final customerOnlyRoutes = ['/buka-toko'];
+        
+        // Guest tidak bisa akses protected routes
+        if (isGuest && protectedRoutes.any((route) => state.matchedLocation.startsWith(route))) {
+          return '/login';
+        }
+        
+        // Seller only routes
+        if (!user.isSeller && sellerOnlyRoutes.any((route) => state.matchedLocation.startsWith(route))) {
+          return '/profil'; // Redirect ke profile jika bukan seller
+        }
+        
+        // Customer only routes (buka toko hanya untuk customer, bukan seller)
+        if (user.isSeller && customerOnlyRoutes.any((route) => state.matchedLocation.startsWith(route))) {
+          return '/toko'; // Redirect ke toko jika sudah seller
+        }
+        
+        return null; // No redirect
+      },
+      routes: [
     // MAIN SCREENS
     GoRoute(
       path: '/',
@@ -100,4 +128,6 @@ final GoRouter appRouter = GoRouter(
       builder: (context, state) => const HelpScreen(),
     ),
   ],
-);
+    );
+  }
+}
