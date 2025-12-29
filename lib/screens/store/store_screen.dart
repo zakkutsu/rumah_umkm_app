@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
+import '../../utils/auth_service.dart';
 
 class StoreScreen extends StatelessWidget {
   const StoreScreen({super.key});
@@ -11,11 +13,50 @@ class StoreScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Dummy data toko
+    final authService = context.watch<AuthService>();
+    final user = authService.currentUser;
+    
+    // Verifikasi user adalah seller
+    if (!user.isSeller) {
+      return Scaffold(
+        appBar: AppBar(title: const Text('Toko Saya')),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.store_outlined, size: 80, color: Colors.grey),
+              const SizedBox(height: 16),
+              const Text(
+                'Anda belum memiliki toko',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+              ),
+              const SizedBox(height: 8),
+              const Text(
+                'Buka toko untuk mulai berjualan',
+                style: TextStyle(color: Colors.grey),
+              ),
+              const SizedBox(height: 24),
+              ElevatedButton.icon(
+                onPressed: () => context.push('/buka-toko'),
+                icon: const Icon(Icons.add_business),
+                label: const Text('Buka Toko'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+    
+    // Dummy data produk toko
     final storeProducts = [
-      {'nama': 'Keripik Singkong Pedas', 'harga': 15000, 'stok': 25, 'terjual': 50},
-      {'nama': 'Emping Melinjo Balado', 'harga': 25000, 'stok': 15, 'terjual': 35},
-      {'nama': 'Kue Kering Kombinasi', 'harga': 55000, 'stok': 10, 'terjual': 20},
+      {'nama': 'Produk Toko 1', 'harga': 15000, 'stok': 25, 'terjual': 50},
+      {'nama': 'Produk Toko 2', 'harga': 25000, 'stok': 15, 'terjual': 35},
+      {'nama': 'Produk Toko 3', 'harga': 55000, 'stok': 10, 'terjual': 20},
     ];
 
     return Scaffold(
@@ -59,18 +100,18 @@ class StoreScreen extends StatelessWidget {
                     child: const Icon(Icons.store, size: 40, color: Colors.green),
                   ),
                   const SizedBox(height: 16),
-                  const Text(
-                    'Dapur Bu Siti',
-                    style: TextStyle(
+                  Text(
+                    user.storeName ?? 'Toko Saya',
+                    style: const TextStyle(
                       color: Colors.white,
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 4),
-                  const Text(
-                    'Makanan & Camilan Tradisional',
-                    style: TextStyle(color: Colors.white70, fontSize: 14),
+                  Text(
+                    user.storeCategory ?? 'Kategori Toko',
+                    style: const TextStyle(color: Colors.white70, fontSize: 14),
                   ),
                 ],
               ),
