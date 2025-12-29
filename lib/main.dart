@@ -1,24 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'routes/app_router.dart';
+import 'utils/auth_service.dart';
 
-void main() {
-  runApp(const RumahUMKMApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  // Initialize auth service
+  final authService = AuthService();
+  await authService.initialize();
+  
+  runApp(RumahUMKMApp(authService: authService));
 }
 
 class RumahUMKMApp extends StatelessWidget {
-  const RumahUMKMApp({super.key});
+  final AuthService authService;
+  
+  const RumahUMKMApp({super.key, required this.authService});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      routerConfig: appRouter,
-      title: 'Rumah UMKM Desa',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
-        textTheme: GoogleFonts.poppinsTextTheme(),
+    return ChangeNotifierProvider.value(
+      value: authService,
+      child: MaterialApp.router(
+        routerConfig: appRouter,
+        title: 'Rumah UMKM Desa',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          useMaterial3: true,
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
+          textTheme: GoogleFonts.poppinsTextTheme(),
+        ),
       ),
     );
   }
