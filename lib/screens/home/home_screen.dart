@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../utils/auth_service.dart';
+import '../../utils/cart_service.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -19,9 +20,6 @@ class _HomeScreenState extends State<HomeScreen> {
   // 2. VARIABLE STATE UNTUK SEARCH
   String _searchQuery = "";
   final TextEditingController _searchController = TextEditingController();
-  
-  // 3. VARIABLE STATE UNTUK CART (dummy)
-  int _cartItemCount = 3;
   
   final List<String> _daftarKategori = [
     "Semua",
@@ -315,6 +313,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final authService = context.watch<AuthService>();
     final user = authService.currentUser;
+    final cartService = context.watch<CartService>();
+    final cartItemCount = cartService.itemCount;
     
     // 3. LOGIC FILTERING (Saring data sebelum ditampilkan)
     List<Map<String, dynamic>> produkDitampilkan;
@@ -591,7 +591,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         icon: const Icon(Icons.shopping_cart_outlined, color: Colors.green),
                       ),
                     ),
-                    if (_cartItemCount > 0)
+                    if (cartItemCount > 0)
                       Positioned(
                         right: 0,
                         top: 0,
@@ -606,7 +606,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             minHeight: 18,
                           ),
                           child: Text(
-                            '$_cartItemCount',
+                            '$cartItemCount',
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 11,
