@@ -6,6 +6,10 @@ import '../screens/about/about_screen.dart';
 import '../screens/about/how_to_shop_screen.dart';
 import '../screens/about/partners_screen.dart';
 import '../screens/help/help_screen.dart';
+import '../screens/profile/profile_screen.dart';
+import '../screens/orders/orders_screen.dart';
+import '../screens/store/store_screen.dart';
+import '../screens/settings/settings_screen.dart';
 
 /// Konfigurasi routing aplikasi UMKM
 /// Semua route terpusat di sini untuk maintenance mudah
@@ -30,6 +34,28 @@ final GoRouter appRouter = GoRouter(
       path: '/keranjang',
       name: 'cart',
       builder: (context, state) => const CartScreen(),
+    ),
+
+    // PROFILE MENU SCREENS
+    GoRoute(
+      path: '/profil',
+      name: 'profile',
+      builder: (context, state) => const ProfileScreen(),
+    ),
+    GoRoute(
+      path: '/pesanan',
+      name: 'orders',
+      builder: (context, state) => const OrdersScreen(),
+    ),
+    GoRoute(
+      path: '/toko',
+      name: 'store',
+      builder: (context, state) => const StoreScreen(),
+    ),
+    GoRoute(
+      path: '/pengaturan',
+      name: 'settings',
+      builder: (context, state) => const SettingsScreen(),
     ),
 
     // FOOTER MENU SCREENS

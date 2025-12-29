@@ -438,10 +438,45 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ],
                   onSelected: (value) {
-                    // Handle menu actions
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Menu: $value dipilih')),
-                    );
+                    // Navigate to respective screens
+                    switch (value) {
+                      case 'profile':
+                        context.push('/profil');
+                        break;
+                      case 'orders':
+                        context.push('/pesanan');
+                        break;
+                      case 'store':
+                        context.push('/toko');
+                        break;
+                      case 'settings':
+                        context.push('/pengaturan');
+                        break;
+                      case 'logout':
+                        showDialog(
+                          context: context,
+                          builder: (ctx) => AlertDialog(
+                            title: const Text('Keluar'),
+                            content: const Text('Apakah Anda yakin ingin keluar?'),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.pop(ctx),
+                                child: const Text('Batal'),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(ctx);
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(content: Text('Berhasil keluar')),
+                                  );
+                                },
+                                child: const Text('Keluar', style: TextStyle(color: Colors.red)),
+                              ),
+                            ],
+                          ),
+                        );
+                        break;
+                    }
                   },
                 ),
               ],
