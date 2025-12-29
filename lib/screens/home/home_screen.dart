@@ -14,6 +14,13 @@ class _HomeScreenState extends State<HomeScreen> {
   String _kategoriTerpilih = "Semua"; // Defaultnya menampilkan semua
   final ScrollController _categoryScrollController = ScrollController();
   
+  // 2. VARIABLE STATE UNTUK SEARCH
+  String _searchQuery = "";
+  final TextEditingController _searchController = TextEditingController();
+  
+  // 3. VARIABLE STATE UNTUK CART (dummy)
+  int _cartItemCount = 3;
+  
   final List<String> _daftarKategori = [
     "Semua",
     "Makanan",
@@ -33,6 +40,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void dispose() {
     _categoryScrollController.dispose();
+    _searchController.dispose();
     super.dispose();
   }
 
@@ -310,25 +318,223 @@ class _HomeScreenState extends State<HomeScreen> {
     } else {
       produkDitampilkan = _produkList.where((item) => item['kategori'] == _kategoriTerpilih).toList();
     }
+    
+    // Filter berdasarkan search query
+    if (_searchQuery.isNotEmpty) {
+      produkDitampilkan = produkDitampilkan.where((item) {
+        final nama = item['nama'].toString().toLowerCase();
+        final toko = item['toko'].toString().toLowerCase();
+        final query = _searchQuery.toLowerCase();
+        return nama.contains(query) || toko.contains(query);
+      }).toList();
+    }
 
     return Scaffold(
       backgroundColor: Colors.grey[50],
       appBar: AppBar(
-        title: Row(
-          children: const [
-            Icon(Icons.storefront, color: Colors.green),
-            SizedBox(width: 10),
-            Text("Rumah UMKM", style: TextStyle(fontWeight: FontWeight.bold)),
+        elevation: 0,
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.white,
+        toolbarHeight: 120,
+        title: Column(
+          children: [
+            // TIER 1: Branding & Profile
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // Logo & Brand
+                Row(
+                  children: const [
+                    Icon(Icons.storefront, color: Colors.green, size: 28),
+                    SizedBox(width: 10),
+                    Text(
+                      "Rumah UMKM",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        color: Colors.black87,
+                      ),
+                    ),
+                  ],
+                ),
+                // Profile Dropdown
+                PopupMenuButton<String>(
+                  offset: const Offset(0, 50),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: Colors.grey.shade300),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        CircleAvatar(
+                          radius: 16,
+                          backgroundColor: Colors.green.shade100,
+                          child: const Icon(Icons.person, size: 18, color: Colors.green),
+                        ),
+                        const SizedBox(width: 8),
+                        const Text(
+                          "Budi Santoso",
+                          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                        ),
+                        const SizedBox(width: 4),
+                        const Icon(Icons.arrow_drop_down, size: 20),
+                      ],
+                    ),
+                  ),
+                  itemBuilder: (context) => [
+                    const PopupMenuItem(
+                      value: 'profile',
+                      child: Row(
+                        children: [
+                          Icon(Icons.person_outline, size: 20),
+                          SizedBox(width: 12),
+                          Text('Profil Saya'),
+                        ],
+                      ),
+                    ),
+                    const PopupMenuItem(
+                      value: 'orders',
+                      child: Row(
+                        children: [
+                          Icon(Icons.receipt_long_outlined, size: 20),
+                          SizedBox(width: 12),
+                          Text('Pesanan Saya'),
+                        ],
+                      ),
+                    ),
+                    const PopupMenuItem(
+                      value: 'store',
+                      child: Row(
+                        children: [
+                          Icon(Icons.store_outlined, size: 20),
+                          SizedBox(width: 12),
+                          Text('Toko Saya'),
+                        ],
+                      ),
+                    ),
+                    const PopupMenuDivider(),
+                    const PopupMenuItem(
+                      value: 'settings',
+                      child: Row(
+                        children: [
+                          Icon(Icons.settings_outlined, size: 20),
+                          SizedBox(width: 12),
+                          Text('Pengaturan'),
+                        ],
+                      ),
+                    ),
+                    const PopupMenuItem(
+                      value: 'logout',
+                      child: Row(
+                        children: [
+                          Icon(Icons.logout, size: 20, color: Colors.red),
+                          SizedBox(width: 12),
+                          Text('Keluar', style: TextStyle(color: Colors.red)),
+                        ],
+                      ),
+                    ),
+                  ],
+                  onSelected: (value) {
+                    // Handle menu actions
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Menu: $value dipilih')),
+                    );
+                  },
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            // TIER 2: Search & Cart
+            Row(
+              children: [
+                // Search Bar
+                Expanded(
+                  child: Container(
+                    height: 45,
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade100,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.grey.shade300),
+                    ),
+                    child: TextField(
+                      controller: _searchController,
+                      onChanged: (value) {
+                        setState(() {
+                          _searchQuery = value;
+                        });
+                      },
+                      decoration: InputDecoration(
+                        hintText: 'Cari produk UMKM...',
+                        hintStyle: TextStyle(color: Colors.grey.shade500),
+                        prefixIcon: Icon(Icons.search, color: Colors.grey.shade600),
+                        suffixIcon: _searchQuery.isNotEmpty
+                            ? IconButton(
+                                icon: const Icon(Icons.clear, size: 20),
+                                onPressed: () {
+                                  setState(() {
+                                    _searchController.clear();
+                                    _searchQuery = '';
+                                  });
+                                },
+                              )
+                            : null,
+                        border: InputBorder.none,
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                // Cart Button with Badge
+                Stack(
+                  children: [
+                    Container(
+                      height: 45,
+                      width: 45,
+                      decoration: BoxDecoration(
+                        color: Colors.green.shade50,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: Colors.green.shade200),
+                      ),
+                      child: IconButton(
+                        onPressed: () => context.push('/keranjang'),
+                        icon: const Icon(Icons.shopping_cart_outlined, color: Colors.green),
+                      ),
+                    ),
+                    if (_cartItemCount > 0)
+                      Positioned(
+                        right: 0,
+                        top: 0,
+                        child: Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: const BoxDecoration(
+                            color: Colors.red,
+                            shape: BoxShape.circle,
+                          ),
+                          constraints: const BoxConstraints(
+                            minWidth: 18,
+                            minHeight: 18,
+                          ),
+                          child: Text(
+                            '$_cartItemCount',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 11,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ],
+            ),
           ],
         ),
-        actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
-          IconButton(
-          onPressed: () => context.push('/keranjang'), // <--- Pindah ke halaman keranjang
-          icon: const Icon(Icons.shopping_cart_outlined)
-          ),
-          const SizedBox(width: 10),
-        ],
       ),
 
       floatingActionButton: FloatingActionButton.extended(

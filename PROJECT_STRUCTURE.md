@@ -20,14 +20,12 @@ lib/
 │   │   └── partners_screen.dart        # Daftar Mitra UMKM
 │   └── help/
 │       └── help_screen.dart            # Bantuan & FAQ
-├── widgets/                            # Widget reusable (future)
-│   ├── product_card.dart               # Card produk
-│   ├── category_chip.dart              # Chip kategori
-│   └── footer_widget.dart              # Footer
-├── models/                             # Data models (future)
-│   └── product_model.dart              # Model produk
-└── utils/                              # Helper functions (future)
-    └── formatters.dart                 # Format currency, date, dll
+├── widgets/                            # Widget reusable (siap digunakan)
+│   └── .gitkeep                        # Placeholder untuk folder kosong
+├── models/                             # Data models (siap digunakan)
+│   └── .gitkeep                        # Placeholder untuk folder kosong
+└── utils/                              # Helper functions (siap digunakan)
+    └── .gitkeep                        # Placeholder untuk folder kosong
 ```
 
 ## 🛣️ Routing Structure
@@ -150,7 +148,15 @@ Aplikasi ini didesain untuk **cross-platform**:
 7. ✅ Route management
 8. ✅ State management (StatefulWidget)
 
+## 📊 File Statistics
+
+- **Total Screens:** 7 files
+- **Total Code Lines:** ~26,926 (home_screen.dart terbesar)
+- **Routes Configured:** 7 routes
+- **Folders Ready:** models/, utils/, widgets/ (siap untuk ekspansi)
+
 ---
 
 **Dibuat:** 28 Desember 2025  
+**Last Updated:** 29 Desember 2025  
 **Developer:** Rumah UMKM Development Team
