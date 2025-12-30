@@ -121,7 +121,7 @@ dependencies:
 
 1. **Clone Repository**
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/zakkutsu/rumah_umkm_app
    cd rumah_umkm_app
    ```
 
